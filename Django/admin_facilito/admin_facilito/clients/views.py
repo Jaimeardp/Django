@@ -13,6 +13,7 @@ from forms import LoginForm
 from forms import CreateUserForm
 
 from django.views.generic import View
+from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 def show(request):
 	return HttpResponse("Hola desde el cliente")
@@ -72,6 +73,12 @@ def login_(request):
 		'message': message,
 	}
 	return render(request,'login.html',context)
+
+class DashboardView(LoginRequiredMixin,View):
+	login_url = 'client:login'
+
+	def get(self,request,*args,**kwargs):
+		return render(request,'dashboard.html',{})
 
 @login_required(login_url='client:login') #DEcoradores : Verifica si el usuario esta logeado, caso contrario te dirige a login
 def dashboard(request):
