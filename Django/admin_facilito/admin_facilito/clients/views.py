@@ -11,11 +11,39 @@ from django.contrib.auth.decorators import login_required
 
 from forms import LoginForm
 from forms import CreateUserForm
+
+from django.views.generic import View
 # Create your views here.
 def show(request):
 	return HttpResponse("Hola desde el cliente")
 
-def login(request):
+class LoginView(View):
+	form = LoginForm()
+	message = None
+	template = 'login.html'
+
+	def get(self,request,*args,**kwargs):
+		if request.user.is_authenticated():
+			return redirect('client:dashboard')
+		return render(request,self.template,self.get_context())
+
+	def post(self,request,*args,**kwargs):
+		username_post = request.POST['username']
+		password_post = request.POST['password']
+		user = authenticate(username=username_post,password= password_post) # Recibe la contraseña en texto plano
+		# Luego luego lo encripta y lo compara con la pass que esta en la DB
+		print user
+		if user is not None:
+			login_django(request,user)
+			return redirect('client:dashboard')
+		else:
+			self.message="Usuario o Pass incorrecto"
+		return render(request,self.template,self.get_context())
+
+	def get_context(self):
+		return {'form':self.form,'message':self.message}
+
+def login_(request):
 	if request.user.is_authenticated():
 		return redirect('client:dashboard')
 	message = None
