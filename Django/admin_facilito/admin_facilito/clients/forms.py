@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django import forms
 from django.contrib.auth.models import User
 
@@ -33,3 +34,15 @@ class EditUserForm(forms.ModelForm):
 	class Meta:
 		model = User
 		fields = ('username','email','first_name','last_name')
+
+class EditPasswordForm(forms.Form):
+	password = forms.CharField(max_length = 20, widget = forms.PasswordInput())
+	new_password = forms.CharField(max_length = 20, widget = forms.PasswordInput())
+	repeat_password = forms.CharField(max_length = 20, widget = forms.PasswordInput())
+
+	def clean_new_password(self):
+		value_password = self.cleaned_data['new_password']
+		if len(value_password)<5:
+			raise forms.ValidationError('Contraseña muy corta')
+		return value_password
+		
