@@ -11,6 +11,13 @@ ERROR_MESSAGE_PASSWORD = {'required': 'La clave es requerido'}
 ERROR_MESSAGE_EMAIL = {'required': 'El email es requerido','invalid':'Ingrese un correo valido'}
 
 """
+Validators
+"""
+def must_be_gt(value_password):
+	if len(value_password)<5:
+		raise forms.ValidationError('Contraseña muy corta')
+
+"""
 Clases
 """
 
@@ -37,12 +44,12 @@ class EditUserForm(forms.ModelForm):
 
 class EditPasswordForm(forms.Form):
 	password = forms.CharField(max_length = 20, widget = forms.PasswordInput())
-	new_password = forms.CharField(max_length = 20, widget = forms.PasswordInput())
-	repeat_password = forms.CharField(max_length = 20, widget = forms.PasswordInput())
+	new_password = forms.CharField(max_length = 20, widget = forms.PasswordInput(),validators=[must_be_gt])
+	repeat_password = forms.CharField(max_length = 20, widget = forms.PasswordInput(),validators=[must_be_gt])
 
-	def clean_new_password(self):
-		value_password = self.cleaned_data['new_password']
-		if len(value_password)<5:
-			raise forms.ValidationError('Contraseña muy corta')
-		return value_password
+	#def clean_new_password(self):
+	#	value_password = self.cleaned_data['new_password']
+	#	if len(value_password)<5:
+	#		raise forms.ValidationError('Contraseña muy corta')
+	#	return value_password
 		
