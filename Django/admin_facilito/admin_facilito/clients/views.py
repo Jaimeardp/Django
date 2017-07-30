@@ -15,12 +15,17 @@ from forms import CreateUserForm
 
 from django.views.generic import View
 from django.views.generic import DetailView
+from django.views.generic import CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
+
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse_lazy
 # Create your views here.
 class ShowView(DetailView):
 	model = User
 	template_name = 'show.html'
-	slug_field= 'username'
+	slug_field= 'username' # Que campo de la bd
+	slug_url_kwarg ='username_url' #Que atributo de la bd
 
 #def show(request):
 #	return HttpResponse("Hola desde el cliente")
@@ -95,6 +100,18 @@ def dashboard(request):
 def logout(request):
 	logout_django(request)
 	return redirect('client:login')
+class Create(CreateView):
+	success_url = reverse_lazy('client:login')	
+	template_name = 'create.html'
+	model = User
+	#fields = ('username','email')
+	form_class = CreateUserForm
+
+	def form_valid(self,form):
+		self.object = form.save(commit = False) 
+		self.object.set_password(self.object.password)
+		self.object.save()
+		return HttpResponseRedirect(self.get_success_url()) 
 
 def create(request):
 	form = CreateUserForm(request.POST or None)
