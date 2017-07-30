@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
+from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.shortcuts import redirect
 
-from django.http import HttpResponse
+#from django.http import HttpResponse
 
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as login_django
@@ -13,10 +14,16 @@ from forms import LoginForm
 from forms import CreateUserForm
 
 from django.views.generic import View
+from django.views.generic import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
-def show(request):
-	return HttpResponse("Hola desde el cliente")
+class ShowView(DetailView):
+	model = User
+	template_name = 'show.html'
+	slug_field= 'username'
+
+#def show(request):
+#	return HttpResponse("Hola desde el cliente")
 
 class LoginView(View):
 	form = LoginForm()
