@@ -10,12 +10,16 @@ from django.contrib.auth import login as login_django
 from django.contrib.auth import logout as logout_django
 from django.contrib.auth.decorators import login_required
 
+#Formularios
 from forms import LoginForm
 from forms import CreateUserForm
+from forms import EditUserForm
 
 from django.views.generic import View
 from django.views.generic import DetailView
 from django.views.generic import CreateView
+from django.views.generic.edit import UpdateView
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.http import HttpResponseRedirect
@@ -113,16 +117,14 @@ class Create(CreateView):
 		self.object.save()
 		return HttpResponseRedirect(self.get_success_url()) 
 
-def create(request):
-	form = CreateUserForm(request.POST or None)
-	if request.method == 'POST':
-		if(form.is_valid()):
-			user = form.save(commit = False) # Nos regresa un objecto usermodel y guarda a la DB
-			user.set_password(user.password) # Metodo de nuestro user, que encripta
-			# user.password que es de nuestro formulario 
-			user.save() # De esta manera ya estoy almacenando en la DB encriptada
-			return redirect('client:login')
-	context = {
-		'form':form
-	}
-	return render(request,'create.html',context)
+class Edit(UpdateView):
+	model = User
+	template_name = 'edit.html'
+	success_url = reverse_lazy('client:dashboard')
+	form_class = EditUserForm
+
+	def get_object(self,queryset=None):
+		return self.request.user
+		
+
+
