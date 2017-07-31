@@ -98,7 +98,7 @@ class Edit(UpdateView):
 		return self.request.user
 
 def edit_password(request):
-	message = None
+	message = 'Contraseña Incorrecta'
 	form = EditPasswordForm(request.POST or None)
 	if request.method =='POST':
 		if form.is_valid():
@@ -108,7 +108,7 @@ def edit_password(request):
 				request.user.set_password(new_password)
 				request.user.save()
 				update_session_auth_hash(request,request.user)
-				message = 'Mensaje actualizado'
+				message = 'Contraseña actualizado'
 		
 	context = {'form':form,'message':message}
 	return render(request,'edit_password.html',context)
