@@ -47,9 +47,11 @@ class EditPasswordForm(forms.Form):
 	new_password = forms.CharField(max_length = 20, widget = forms.PasswordInput(),validators=[must_be_gt])
 	repeat_password = forms.CharField(max_length = 20, widget = forms.PasswordInput(),validators=[must_be_gt])
 
-	#def clean_new_password(self):
-	#	value_password = self.cleaned_data['new_password']
-	#	if len(value_password)<5:
-	#		raise forms.ValidationError('Contraseña muy corta')
-	#	return value_password
+	def clean(self):
+		clean_data = super(EditPasswordForm,self).clean()
+		password1 = clean_data['new_password']
+		password2 = clean_data['repeat_password']
+
+		if password1!=password2:
+			raise forms.ValidationError('Las contraseñas no coinciden')
 		

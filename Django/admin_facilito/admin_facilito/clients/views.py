@@ -26,6 +26,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse_lazy
+
+from django.contrib.auth import update_session_auth_hash
 # Create your views here.
 class ShowView(DetailView):
 	model = User
@@ -96,10 +98,19 @@ class Edit(UpdateView):
 		return self.request.user
 
 def edit_password(request):
+	message = None
 	form = EditPasswordForm(request.POST or None)
-	if form.is_valid():
-		print ("Formulario Valido")
-	context = {'form':form}
+	if request.method =='POST':
+		if form.is_valid():
+			current_password = form.cleaned_data['password']
+			new_password = form.cleaned_data['new_password']
+			if authenticate(username = request.user.username, password = current_password):
+				request.user.set_password(new_password)
+				request.user.save()
+				update_session_auth_hash(request,request.user)
+				message = 'Mensaje actualizado'
+		
+	context = {'form':form,'message':message}
 	return render(request,'edit_password.html',context)
 		
 
