@@ -11,7 +11,7 @@ ERROR_MESSAGE_PASSWORD = {'required': 'La clave es requerido'}
 ERROR_MESSAGE_EMAIL = {'required': 'El email es requerido','invalid':'Ingrese un correo valido'}
 
 """
-Validators
+Functions
 """
 def must_be_gt(value_password):
 	if len(value_password)<5:
@@ -24,8 +24,6 @@ Clases
 class LoginForm(forms.Form):
 	username = forms.CharField(max_length = 20)
 	password = forms.CharField(max_length = 20, widget = forms.PasswordInput())
-
-#, widget = forms.PasswordInput()
 
 class CreateUserForm(forms.ModelForm):
 	username = forms.CharField(max_length = 20, error_messages=ERROR_MESSAGE_USER)
@@ -54,4 +52,6 @@ class EditPasswordForm(forms.Form):
 
 		if password1!=password2:
 			raise forms.ValidationError('Las contraseñas no coinciden')
+
+		return self.clean_data
 		

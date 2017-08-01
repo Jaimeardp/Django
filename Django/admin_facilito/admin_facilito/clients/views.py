@@ -9,6 +9,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login as login_django
 from django.contrib.auth import logout as logout_django
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import update_session_auth_hash
 
 #Formularios
 from forms import LoginForm
@@ -27,18 +28,20 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse_lazy
 
-from django.contrib.auth import update_session_auth_hash
+
 # Create your views here.
-class ShowView(DetailView):
+
+"""
+Class
+"""
+
+class ShowClass(DetailView):
 	model = User
 	template_name = 'show.html'
 	slug_field= 'username' # Que campo de la bd
 	slug_url_kwarg ='username_url' #Que atributo de la bd
 
-#def show(request):
-#	return HttpResponse("Hola desde el cliente")
-
-class LoginView(View):
+class LoginClass(View):
 	form = LoginForm()
 	message = None
 	template = 'login.html'
@@ -64,18 +67,13 @@ class LoginView(View):
 	def get_context(self):
 		return {'form':self.form,'message':self.message}
 
-class DashboardView(LoginRequiredMixin,View):
+class DashboardClass(LoginRequiredMixin,View):
 	login_url = 'client:login'
 
 	def get(self,request,*args,**kwargs):
 		return render(request,'dashboard.html',{})
 
-@login_required(login_url='client:login')
-def logout(request):
-	logout_django(request)
-	return redirect('client:login')
-
-class Create(CreateView):
+class CreateClass(CreateView):
 	success_url = reverse_lazy('client:login')	
 	template_name = 'create.html'
 	model = User
@@ -88,7 +86,8 @@ class Create(CreateView):
 		self.object.save()
 		return HttpResponseRedirect(self.get_success_url()) 
 
-class Edit(UpdateView):
+class EditClass(UpdateView):
+	login_url='client:login'
 	model = User
 	template_name = 'edit.html'
 	success_url = reverse_lazy('client:dashboard')
@@ -97,6 +96,10 @@ class Edit(UpdateView):
 	def get_object(self,queryset=None):
 		return self.request.user
 
+"""
+Functions
+"""
+@login_required(login_url='client:login')
 def edit_password(request):
 	message = 'Contraseña Incorrecta'
 	form = EditPasswordForm(request.POST or None)
@@ -105,7 +108,7 @@ def edit_password(request):
 			current_password = form.cleaned_data['password']
 			new_password = form.cleaned_data['new_password']
 			if authenticate(username = request.user.username, password = current_password):
-				request.user.set_password(new_password)
+				request.user.set_password( new_password )
 				request.user.save()
 				update_session_auth_hash(request,request.user)
 				message = 'Contraseña actualizado'
@@ -113,5 +116,8 @@ def edit_password(request):
 	context = {'form':form,'message':message}
 	return render(request,'edit_password.html',context)
 		
-
+@login_required(login_url='client:login')
+def logout(request):
+	logout_django(request)
+	return redirect('client:login')
 
