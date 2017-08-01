@@ -95,12 +95,17 @@ class CreateClass(CreateView):
 		self.object.save()
 		return HttpResponseRedirect(self.get_success_url()) 
 
-class EditClass(UpdateView):
+class EditClass(LoginRequiredMixin,UpdateView,SuccessMessageMixin):
 	login_url='client:login'
 	model = User
 	template_name = 'edit.html'
-	success_url = reverse_lazy('client:dashboard')
+	success_url = reverse_lazy('client:edit')
 	form_class = EditUserForm
+	success_message = "Perfil Actualizado Exitosamente"
+	
+	def form_valid(self,request,*args,**kwargs):
+		messages.success(self.request,self.success_message)
+		return super(EditClass,self).form_valid(request,*args,**kwargs)
 
 	def get_object(self,queryset=None):
 		return self.request.user
@@ -110,7 +115,7 @@ Functions
 """
 @login_required(login_url='client:login')
 def edit_password(request):
-	message = 'Contraseña Incorrecta'
+	#message = 'Contraseña Incorrecta'
 	form = EditPasswordForm(request.POST or None)
 	if request.method =='POST':
 		if form.is_valid():
@@ -120,9 +125,12 @@ def edit_password(request):
 				request.user.set_password( new_password )
 				request.user.save()
 				update_session_auth_hash(request,request.user)
-				message = 'Contraseña actualizado'
+				#message = 'Contraseña actualizado'
+				messages.success(request,'Constraseña actualizada')
+			else:
+				messages.error(request,'No es posible actualizar el password')
 		
-	context = {'form':form,'message':message}
+	context = {'form':form}
 	return render(request,'edit_password.html',context)
 		
 @login_required(login_url='client:login')
