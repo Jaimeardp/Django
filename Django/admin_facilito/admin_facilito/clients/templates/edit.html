@@ -1,14 +1,27 @@
+{% load staticfiles %}
 
-{% if messages %}
-	<ul>
-	{%for message in messages %}
-	<li> {{message}} </li>
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Edit Usuario</title>
+	<link rel="stylesheet" type="text/css" href="{% static 'style.css'%}">
+</head>
+<body>
+	<h3>Edit Password</h3>
+
+	{% if messages %}
+		<ul>
+		{%for message in messages %}
+			<li {% if message.tags %} class="{{message.tags}}_message" {% endif %} > {{message}} </li>
 		{% endfor %}
-	</ul>
-{% endif%}
+		</ul>
+	{% endif%}
 
-<form method="post" action="">
-	{% csrf_token %}
-	{{form.as_p}}
-	<input type="submit" value="actualizar">
-</form>
+	<form method="post" action="">
+		{% csrf_token %}
+		{{form.as_p}}
+		<input type="submit" value="update">
+	</form>
+</body>
+</html>
+
