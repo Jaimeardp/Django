@@ -1,32 +1,41 @@
 # -*- coding: utf-8 -*-
+
 from django.contrib.auth.models import User
+#from .models import Client
+#from .models import SocialNetwork
+
 from django.shortcuts import render
 from django.shortcuts import redirect
 
-#from django.http import HttpResponse
+from django.contrib.auth.models import User
 
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as login_django
 from django.contrib.auth import logout as logout_django
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth import update_session_auth_hash
 
-#Formularios
-from forms import LoginForm
+from django.contrib.auth.decorators import login_required
+
+from forms import LoginUserForm
 from forms import CreateUserForm
 from forms import EditUserForm
 from forms import EditPasswordForm
+#from forms import EditClientForm
+#from forms import EditClientSocial
 
+from django.views.generic import TemplateView
 from django.views.generic import View
 from django.views.generic import DetailView
 from django.views.generic import CreateView
 from django.views.generic.edit import UpdateView
-
-
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.http import HttpResponseRedirect
+from django.http import HttpResponse
 from django.core.urlresolvers import reverse_lazy
+
+from django.contrib import messages
+from django.contrib.messages.views import SuccessMessageMixin
 
 
 # Create your views here.
@@ -42,7 +51,7 @@ class ShowClass(DetailView):
 	slug_url_kwarg ='username_url' #Que atributo de la bd
 
 class LoginClass(View):
-	form = LoginForm()
+	form = LoginUserForm()
 	message = None
 	template = 'login.html'
 

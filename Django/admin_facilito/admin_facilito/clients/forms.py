@@ -21,7 +21,7 @@ def must_be_gt(value_password):
 Clases
 """
 
-class LoginForm(forms.Form):
+class LoginUserForm(forms.Form):
 	username = forms.CharField(max_length = 20)
 	password = forms.CharField(max_length = 20, widget = forms.PasswordInput())
 
@@ -47,11 +47,11 @@ class EditPasswordForm(forms.Form):
 
 	def clean(self):
 		clean_data = super(EditPasswordForm,self).clean()
-		password1 = clean_data['new_password']
-		password2 = clean_data['repeat_password']
+		password1 = clean_data.get('new_password')
+		password2 = clean_data.get('repeat_password')
 
 		if password1!=password2:
 			raise forms.ValidationError('Las contraseñas no coinciden')
 
-		return self.clean_data
+		
 		
