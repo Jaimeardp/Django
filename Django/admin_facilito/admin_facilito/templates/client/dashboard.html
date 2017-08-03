@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>WECOME TO THE JUNGLE</title>
+</head>
+<body>
+	<h3>BIENVENIDO {{user.username| title}}</h3>
+	<a href="{% url 'client:logout'%}">Logout</a>
+	<a href="{% url 'client:show' user.username%}">Show</a>
+	<a href="{% url 'client:edit'%}">Edit</a>
+	<a href="{% url 'client:edit_password'%}">Edit Password</a>
+</body>
+</html>
+
+

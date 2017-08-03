@@ -1,34 +1,15 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title></title>
+{% extends 'bases/base_admin.html' %}
 
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/css/materialize.min.css">
-	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-  	<!-- Compiled and minified JavaScript -->
-  	<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-  	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/js/materialize.min.js"></script>
-          
+{% block title %} Admin facilito {% endblock %}
 
-</head>
-<body>
-	<header>
-		<div class="navbar-fixed"> 
-			<nav>
-    			<div class="nav-wrapper #9e9e9e grey">
-      				<a href="#" data-activates="mobile-demo" class="button-collapse"> <i class="materials-icons"> Menu</i></a>
-      				<ul class="right hide-on-med-and-down lighten-2">
-        				<li><a href="{% url 'client:login' %}">Login</a></li>
-        				<li><a href="{% url 'client:create' %}">Registro</a></li>
-      				</ul>
-      		 		<ul class="side-nav" id="mobile-demo">
-        				<li><a href="{% url 'client:login' %}">Login</a></li>
-        				<li><a href="{% url 'client:create' %}">Registro</a></li>
-      				</ul>
-    			</div>
-  			</nav>
-  		</div>
-		<h3>Home</h3>
-	</header>
-</body>
-</html>
+{% block scripts %}
+  {#  Aqui colocaremos los scripts #}
+{% endblock %} 
+
+{% block content %} 
+  <h3> Bienvenidos a admin facilito </h3>
+{% endblock %} 
+
+{% block footer %} 
+  {#  Aqui colocaremos nuestro footer #}
+{% endblock %}
